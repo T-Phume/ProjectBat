@@ -26,9 +26,8 @@
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="@+id/registerUsernameInput"
-        app:layout_constraintStart_toStartOf="@+id/registerUsernameInput"
-        app:layout_constraintTop_toBottomOf="@+id/registerUsernameInput" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="98dp" />
 
     <EditText
         android:id="@+id/registerPasswordInput1"
@@ -42,17 +41,6 @@
         app:layout_constraintStart_toStartOf="@+id/registerEmailInput2"
         app:layout_constraintTop_toBottomOf="@+id/registerEmailInput2" />
 
-    <EditText
-        android:id="@+id/registerUsernameInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Username"
-        android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:layout_editor_absoluteX="98dp" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="116dp"
@@ -60,7 +48,7 @@
         android:layout_marginTop="8dp"
         android:text="Register"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/registerUsernameInput"
+        app:layout_constraintStart_toStartOf="@+id/registerEmailInput2"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
