@@ -7,7 +7,7 @@
     tools:context=".RegisterActivity">
 
     <EditText
-        android:id="@+id/registerPasswordInput"
+        android:id="@+id/registerPasswordInput2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toBottomOf="@+id/registerPasswordInput1" />
 
     <EditText
-        android:id="@+id/registerEmailInput2"
+        android:id="@+id/registerEmailInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -40,9 +40,9 @@
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/registerEmailInput2"
-        app:layout_constraintStart_toStartOf="@+id/registerEmailInput2"
-        app:layout_constraintTop_toBottomOf="@+id/registerEmailInput2" />
+        app:layout_constraintEnd_toEndOf="@+id/registerEmailInput"
+        app:layout_constraintStart_toStartOf="@+id/registerEmailInput"
+        app:layout_constraintTop_toBottomOf="@+id/registerEmailInput" />
 
     <TextView
         android:id="@+id/textView"
@@ -51,7 +51,7 @@
         android:layout_marginTop="4dp"
         android:text="Register"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/registerEmailInput2"
+        app:layout_constraintStart_toStartOf="@+id/registerEmailInput"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -60,8 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Create Account"
-        app:layout_constraintEnd_toEndOf="@+id/registerPasswordInput"
-        app:layout_constraintStart_toStartOf="@+id/registerPasswordInput"
-        app:layout_constraintTop_toBottomOf="@+id/registerPasswordInput" />
+        app:layout_constraintEnd_toEndOf="@+id/registerPasswordInput2"
+        app:layout_constraintStart_toStartOf="@+id/registerPasswordInput2"
+        app:layout_constraintTop_toBottomOf="@+id/registerPasswordInput2" />
 
 </android.support.constraint.ConstraintLayout>
