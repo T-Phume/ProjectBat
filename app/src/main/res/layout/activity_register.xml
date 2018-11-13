@@ -22,12 +22,15 @@
         android:id="@+id/registerEmailInput2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:layout_editor_absoluteX="98dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/registerPasswordInput1"
@@ -45,7 +48,7 @@
         android:id="@+id/textView"
         android:layout_width="116dp"
         android:layout_height="36dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="Register"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/registerEmailInput2"
@@ -55,9 +58,10 @@
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Create Account"
         app:layout_constraintEnd_toEndOf="@+id/registerPasswordInput"
         app:layout_constraintStart_toStartOf="@+id/registerPasswordInput"
-        tools:layout_editor_absoluteY="277dp" />
+        app:layout_constraintTop_toBottomOf="@+id/registerPasswordInput" />
 
 </android.support.constraint.ConstraintLayout>

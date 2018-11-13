@@ -7,14 +7,14 @@
     tools:context=".LoginActivity">
 
     <Button
-        android:id="@+id/loginRegisterButton"
+        android:id="@+id/loginResendButton"
         android:layout_width="179dp"
         android:layout_height="45dp"
         android:layout_marginTop="8dp"
-        android:text="Register"
-        app:layout_constraintEnd_toEndOf="@+id/loginButton"
-        app:layout_constraintStart_toStartOf="@+id/loginButton"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+        android:text="Resend Verification"
+        app:layout_constraintEnd_toEndOf="@+id/loginPasswordInput"
+        app:layout_constraintStart_toStartOf="@+id/loginPasswordInput"
+        app:layout_constraintTop_toBottomOf="@+id/loginRegisterButton" />
 
     <EditText
         android:id="@+id/loginEmailInput"
@@ -48,22 +48,22 @@
         android:id="@+id/loginButton"
         android:layout_width="179dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Login"
-        app:layout_constraintEnd_toEndOf="@+id/loginPasswordInput"
-        app:layout_constraintStart_toStartOf="@+id/loginPasswordInput"
-        app:layout_constraintTop_toBottomOf="@+id/loginForgotPassword" />
+        app:layout_constraintEnd_toEndOf="@+id/loginResendButton"
+        app:layout_constraintStart_toStartOf="@+id/loginResendButton"
+        app:layout_constraintTop_toBottomOf="@+id/loginResendButton" />
 
     <TextView
         android:id="@+id/loginForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="8dp"
         android:clickable="true"
         android:text="Forgot password?"
         app:layout_constraintEnd_toEndOf="@+id/loginPasswordInput"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="@+id/loginPasswordInput"
         app:layout_constraintTop_toBottomOf="@+id/loginPasswordInput" />
 
     <TextView
@@ -75,5 +75,17 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/loginEmailInput"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/loginRegisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:text="Create account"
+        app:layout_constraintEnd_toEndOf="@+id/loginForgotPassword"
+        app:layout_constraintHorizontal_bias="0.375"
+        app:layout_constraintStart_toStartOf="@+id/loginForgotPassword"
+        app:layout_constraintTop_toBottomOf="@+id/loginForgotPassword" />
 
 </android.support.constraint.ConstraintLayout>
