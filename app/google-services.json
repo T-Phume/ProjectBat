@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "232043993426",
+    "firebase_url": "https://projectbat-f8006.firebaseio.com",
+    "project_id": "projectbat-f8006",
+    "storage_bucket": "projectbat-f8006.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232043993426:android:1e7d8c1e08bcff8b",
+        "android_client_info": {
+          "package_name": "telecommunication.alliance.bat.com.projectbat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232043993426-ua16g3ub982al7c2pj9kp2pqt2mebiha.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLSiWbYHTuuIlnBc5L7Ag8acBVvxg-t-k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
