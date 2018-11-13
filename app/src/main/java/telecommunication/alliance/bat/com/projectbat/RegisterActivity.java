@@ -39,29 +39,25 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(!isEmpty(email.getText().toString())  // Check if all fields have been entered
+            public void onClick(View view) {
+
+                //check for null valued EditText fields
+                if(!isEmpty(email.getText().toString())
                         && !isEmpty(password1.getText().toString())
                         && !isEmpty(password2.getText().toString())){
-                    if(isValidEmail(email.getText().toString())){  // Check for valid email format
-                        // Check if password match
+
+                    //check if user has a valid email address
+                    if(isValidEmail(email.getText().toString())){
+                        //check if passwords match
                         if(doStringsMatch(password1.getText().toString(), password2.getText().toString())){
-                            //Check length of password
-                            if(password1.length() <= 16 && password1.length() <= 6){
-                                registerEmail(email.getText().toString(), password1.getText().toString());
-                            } else{
-                                Toast.makeText(RegisterActivity.this, "Length of password should be between 6 and 16",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        } else{
-                            Toast.makeText(RegisterActivity.this, "Password does not match",
-                                    Toast.LENGTH_SHORT).show();
+                            registerEmail(email.getText().toString(), password1.getText().toString());
+                        }else{
+                            Toast.makeText(RegisterActivity.this, "Passwords do not Match", Toast.LENGTH_SHORT).show();
                         }
-                    } else{
-                        Toast.makeText(RegisterActivity.this, "Invalid email format",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
+                    }else
+                        Toast.makeText(RegisterActivity.this, "Invalid email format", Toast.LENGTH_SHORT).show();
+                }else
+                    Toast.makeText(RegisterActivity.this, "You must fill out all the fields", Toast.LENGTH_SHORT).show();
             }
         });
     }
