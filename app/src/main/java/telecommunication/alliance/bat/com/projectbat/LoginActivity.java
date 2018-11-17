@@ -26,9 +26,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView email;
     private TextView password;
-    private TextView forgotPassword;
-    private Button loginButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +34,26 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate");
         setupFirebaseAuth();
 
-        loginButton = findViewById(R.id.loginButton);
+        Button loginButton = findViewById(R.id.loginButton);
+        TextView forgotPassword = findViewById(R.id.loginForgotPassword);
+        TextView registerButton = findViewById(R.id.loginRegisterButton);
         email = findViewById(R.id.loginEmailInput);
         password = findViewById(R.id.loginPasswordInput);
 
-        TextView registerButton = findViewById(R.id.loginRegisterButton);
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
                 startActivity(intent);
             }
         });
@@ -94,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else{
-                        Toast.makeText(LoginActivity.this, user.getEmail().toString() + "Email is not verified",
+                        Toast.makeText(LoginActivity.this, user.getEmail() + "Email is not verified",
                                 Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "NOT VERIFIED");
                     }
@@ -103,26 +111,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-    }
-
-    private void sendVerificationEmail(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "EMAIL VERIFICATION SENT");
-                        Toast.makeText(LoginActivity.this, "Sent email verification",
-                                Toast.LENGTH_SHORT).show();
-                    } else{
-                        Log.d(TAG, "EMAIL VERIFICATION NOT SENT");
-                        Toast.makeText(LoginActivity.this, "Verification not sent",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
     }
 
     @Override

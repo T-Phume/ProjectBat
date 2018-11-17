@@ -2,7 +2,14 @@
     <string name="app_name">ProjectBat</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_feed">Feed</string>
+    <string name="title_wallet">Wallet</string>
+    <string name="title_profile">Profile</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="resend_verification">Resend Verification</string>
 </resources>
