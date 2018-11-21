@@ -1,42 +1,42 @@
 package telecommunication.alliance.bat.com.projectbat;
 
-import android.content.Intent;
+
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Button;
-import android.widget.Toast;
+import android.view.Window;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+public class MainActivity extends AppCompatActivity{
+    private static final String TAG = "MAIN";
 
-public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
-    private TextView check;
-    private Button logout;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener
+            =  new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_feed:
-                    mTextMessage.setText(R.string.title_feed);
+                    fragmentTransaction.replace(R.id.fragment_container, new FeedFragment());
+                    fragmentTransaction.commit();
                     return true;
-                case R.id.navigation_wallet:
-                    mTextMessage.setText(R.string.title_wallet);
+                case R.id.navigation_inbox:
+                    fragmentTransaction.replace(R.id.fragment_container, new InboxFragment());
+                    fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.title_profile);
+                    fragmentTransaction.replace(R.id.fragment_container, new ProfileFragment());
+                    fragmentTransaction.commit();
                     return true;
             }
-            return false;
+            return true;
         }
     };
 
@@ -45,26 +45,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = findViewById(R.id.message);
+
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        check = findViewById(R.id.check);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            check.setText(user.getEmail());
-        }
-
-        logout = findViewById(R.id.Logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        navigation.setOnNavigationItemSelectedListener(navListener);
     }
-
 }

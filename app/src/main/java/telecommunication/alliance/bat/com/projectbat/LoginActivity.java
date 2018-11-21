@@ -61,22 +61,20 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "CLICKED");
-
                 //check for null valued EditText fields
                 if(!isEmpty(email.getText().toString())
                         && !isEmpty(password.getText().toString())){
                     //check if user has a valid email address
-                    Log.d(TAG, "CLICKED2");
                     if(isValidEmail(email.getText().toString())){
                         FirebaseAuth.getInstance().signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful())
+                                if(task.isSuccessful()) {
                                     Log.d(TAG, "AUTHENTICATION SUCCESSFUL");
-                                else{
-                                    Log.d(TAG, "AUTHENTICATION SUCCESSFUL");
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             }
                         });
