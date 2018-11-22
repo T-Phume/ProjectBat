@@ -14,8 +14,26 @@
         android:layout_height="187dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/profileLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_exit_to_app_black_24dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
@@ -51,12 +69,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/username"
             android:src="@drawable/ic_perm_identity_orange_24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.33"
+            app:layout_constraintHorizontal_bias="0.023"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,43 +99,42 @@
             android:layout_marginTop="8dp"
             android:contentDescription="@string/country"
             android:src="@drawable/ic_flag_orange_24dp"
-            app:layout_constraintEnd_toEndOf="@+id/profileUserIcon"
-            app:layout_constraintStart_toStartOf="@+id/profileUserIcon"
-            app:layout_constraintTop_toBottomOf="@+id/profileUserIcon" />
+            app:layout_constraintEnd_toEndOf="@+id/profileEmailIcon"
+            app:layout_constraintStart_toStartOf="@+id/profileEmailIcon"
+            app:layout_constraintTop_toBottomOf="@+id/profileEmailIcon" />
 
         <EditText
             android:id="@+id/profileCountry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
             android:enabled="false"
             android:hint="@string/country"
             android:text="@string/country"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/profileCountryIcon"
-            app:layout_constraintTop_toTopOf="@+id/profileCountryIcon" />
+            app:layout_constraintStart_toStartOf="@+id/profileEmail"
+            app:layout_constraintTop_toBottomOf="@+id/profileEmailIcon" />
 
         <EditText
             android:id="@+id/profileProfession"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
             android:enabled="false"
             android:hint="@string/profession"
             android:text="@string/profession"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/profileProfessionIcon"
-            app:layout_constraintTop_toTopOf="@+id/profileProfessionIcon" />
+            app:layout_constraintStart_toStartOf="@+id/profileCountry"
+            app:layout_constraintTop_toBottomOf="@+id/profileCountry" />
 
         <EditText
             android:id="@+id/profileEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/email"
             android:enabled="false"
@@ -125,20 +142,17 @@
             android:text="@string/email"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/profileEmailIcon"
+            app:layout_constraintStart_toStartOf="@+id/profileUsername"
             app:layout_constraintTop_toTopOf="@+id/profileEmailIcon" />
 
         <Button
             android:id="@+id/profileEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/Edit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileEmail" />
+            app:layout_constraintStart_toStartOf="@+id/profileProfessionIcon"
+            app:layout_constraintTop_toBottomOf="@+id/profileProfessionIcon" />
 
         <ImageView
             android:id="@+id/profileProfessionIcon"
@@ -158,22 +172,9 @@
             android:layout_marginTop="8dp"
             android:contentDescription="@string/email"
             android:src="@drawable/ic_email_orange_24dp"
-            app:layout_constraintEnd_toEndOf="@+id/profileProfessionIcon"
-            app:layout_constraintStart_toStartOf="@+id/profileProfessionIcon"
-            app:layout_constraintTop_toBottomOf="@+id/profileProfessionIcon" />
-
-        <Button
-            android:id="@+id/profileLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/logout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/profileEdit"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/profileEdit"
-            app:layout_constraintTop_toBottomOf="@+id/profileEdit"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintEnd_toEndOf="@+id/profileUserIcon"
+            app:layout_constraintStart_toStartOf="@+id/profileUserIcon"
+            app:layout_constraintTop_toBottomOf="@+id/profileUserIcon" />
 
     </android.support.constraint.ConstraintLayout>
 

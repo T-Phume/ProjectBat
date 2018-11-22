@@ -13,7 +13,7 @@
     <string name="forgot_password">Forgot Password</string>
     <string name="resend_verification">Resend Verification</string>
 
-    //For feed fragment
+    //For profile fragment
     <string name="username">Username</string>
     <string name="country">Country</string>
     <string name="profession">Profession</string>
@@ -21,6 +21,11 @@
     <string name="Edit">Edit</string>
     <string name="Update">Update</string>
     <string name="error">Error</string>
+
+    //For makePost
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="submit">Submit Post</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.regex.Pattern;
 
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -42,11 +45,13 @@ public class ProfileFragment extends Fragment{
     private EditText profession;
     private EditText email;
 
-    private Button logout;
+    private ImageView logout;
 
     private DatabaseReference mDatabaseRef;
     private ValueEventListener userListener;
     private FirebaseUser userAuth;
+
+    private ImageView profileImage;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -83,7 +88,7 @@ public class ProfileFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.d(TAG, "OnCreateView");
@@ -96,6 +101,7 @@ public class ProfileFragment extends Fragment{
         country = view.findViewById(R.id.profileCountry);
         profession = view.findViewById(R.id.profileProfession);
         email = view.findViewById(R.id.profileEmail);
+        profileImage = view.findViewById(R.id.profile_image);
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(userAuth.getUid());
@@ -138,10 +144,27 @@ public class ProfileFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if(update){
+                    String username_s = username.getText().toString();
+                    String country_s = country.getText().toString();
+                    String profession_s = profession.getText().toString();
+
+                    if(isValidUsername(username_s)){
+                        if(isValidCountryName(country_s)){
+                            if(isValidProfession(profession_s)){
+
+                            } else{
+                                Log.d(TAG, "Invalid Profession format");
+                            }
+                        } else{
+                            Log.d(TAG, "Invalid Country name format");
+                        }
+                    } else{
+                        Log.d(TAG, "Invalid Username format");
+                    }
+
                     username.setEnabled(false);
                     country.setEnabled(false);
                     profession.setEnabled(false);
-                    email.setEnabled(false);
                     editButton.setText("Edit");
                     update = false;
                 } else{
@@ -149,7 +172,6 @@ public class ProfileFragment extends Fragment{
                     username.setEnabled(true);
                     country.setEnabled(true);
                     profession.setEnabled(true);
-                    email.setEnabled(true);
                     update = true;
                 }
             }
@@ -157,6 +179,26 @@ public class ProfileFragment extends Fragment{
 
         return view;
     }
+
+    private boolean isValidProfession(String s){
+        String countryRegex = "^[a-zA-Z0-9]{4,30}$";
+        Pattern pat = Pattern.compile(countryRegex);
+        return !(s == null) && pat.matcher(s).matches();
+    }
+
+    private boolean isValidCountryName(String s){
+        String countryRegex = "^[a-zA-Z0-9]{4,20}$";
+        Pattern pat = Pattern.compile(countryRegex);
+        return !(s == null) && pat.matcher(s).matches();
+    }
+
+    private boolean isValidUsername(String s){
+        String usernameRegex = "^[a-zA-Z0-9._-]{4,16}$";
+        Pattern pat = Pattern.compile(usernameRegex);
+        return !(s == null) && pat.matcher(s).matches();
+    }
+
+
 
     @Override
     public void onDestroyView() {

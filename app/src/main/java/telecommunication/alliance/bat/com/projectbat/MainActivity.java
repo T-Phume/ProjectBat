@@ -15,6 +15,9 @@ import android.view.Window;
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MAIN";
+    private FeedFragment feedFragment;
+    private InboxFragment inboxFragment;
+    private ProfileFragment profileFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener
             =  new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -24,15 +27,21 @@ public class MainActivity extends AppCompatActivity{
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_feed:
-                    fragmentTransaction.replace(R.id.fragment_container, new FeedFragment());
+                    fragmentTransaction.hide(inboxFragment);
+                    fragmentTransaction.hide(profileFragment);
+                    fragmentTransaction.show(feedFragment);
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_inbox:
-                    fragmentTransaction.replace(R.id.fragment_container, new InboxFragment());
+                    fragmentTransaction.hide(feedFragment);
+                    fragmentTransaction.hide(profileFragment);
+                    fragmentTransaction.show(inboxFragment);
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_profile:
-                    fragmentTransaction.replace(R.id.fragment_container, new ProfileFragment());
+                    fragmentTransaction.hide(feedFragment);
+                    fragmentTransaction.hide(inboxFragment);
+                    fragmentTransaction.show(profileFragment);
                     fragmentTransaction.commit();
                     return true;
             }
@@ -44,8 +53,14 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FeedFragment()).commit();
-
+        feedFragment = new FeedFragment();
+        inboxFragment = new InboxFragment();
+        profileFragment = new ProfileFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, feedFragment)
+                .add(R.id.fragment_container, inboxFragment)
+                .add(R.id.fragment_container, profileFragment)
+                .hide(profileFragment)
+                .show(feedFragment).commit();
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
