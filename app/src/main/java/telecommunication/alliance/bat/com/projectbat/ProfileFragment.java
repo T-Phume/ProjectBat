@@ -1,19 +1,27 @@
 package telecommunication.alliance.bat.com.projectbat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,6 +31,8 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private static final String TAG = "PROFILE_FRAGMENT";
+
     private Boolean update = false;
 
     private Button editButton;
@@ -31,6 +41,12 @@ public class ProfileFragment extends Fragment {
     private EditText country;
     private EditText profession;
     private EditText email;
+
+    private Button logout;
+
+    private DatabaseReference mDatabaseRef;
+    private ValueEventListener userListener;
+    private FirebaseUser userAuth;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -61,23 +77,62 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.d(TAG, "OnCreate");
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        Log.d(TAG, "OnCreateView");
 
-        editButton = view.findViewById(R.id.feedEdit);
-        username = view.findViewById(R.id.feedUsername);
-        country = view.findViewById(R.id.feedCountry);
-        profession = view.findViewById(R.id.feedProfession);
-        email = view.findViewById(R.id.feedEmail);
+        logout = view.findViewById(R.id.profileLogout);
+        editButton = view.findViewById(R.id.profileEdit);
 
 
-        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        name = name.equals("") ? "Username" : name;
-        username.setText(name);
+        username = view.findViewById(R.id.profileUsername);
+        country = view.findViewById(R.id.profileCountry);
+        profession = view.findViewById(R.id.profileProfession);
+        email = view.findViewById(R.id.profileEmail);
+
+        userAuth = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(userAuth.getUid());
+
+        userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "DATA CHANGE");
+                try {
+                    User user = dataSnapshot.getValue(User.class);
+                    username.setText(user.getUsername());
+                    country.setText(user.getCountry());
+                    profession.setText(user.getProfession());
+                    email.setText(user.getEmail());
+                }
+                catch (Exception e){
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "Failed to read value");
+            }
+        };
+
+        mDatabaseRef.addValueEventListener(userListener);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,5 +156,11 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDatabaseRef.removeEventListener(userListener);
     }
 }

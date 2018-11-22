@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "LOGIN ATTEMPT");
                 //check for null valued EditText fields
                 if(!isEmpty(email.getText().toString())
                         && !isEmpty(password.getText().toString())){

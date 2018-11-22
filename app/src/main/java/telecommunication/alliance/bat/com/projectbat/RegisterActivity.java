@@ -16,15 +16,23 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "REGISTER_ACTIVITY_TAG";
 
+    private FirebaseUser user;
+
     private TextView email;
     private TextView password1;
     private TextView password2;
     private Button registerButton;
+    private TextView username;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         password1 = findViewById(R.id.registerPasswordInput1);
         password2 = findViewById(R.id.registerPasswordInput2);
         registerButton = findViewById(R.id.registerButton);
+        username = findViewById(R.id.registerUsername);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,13 +53,18 @@ public class RegisterActivity extends AppCompatActivity {
                 //check for null valued EditText fields
                 if(!isEmpty(email.getText().toString())
                         && !isEmpty(password1.getText().toString())
-                        && !isEmpty(password2.getText().toString())){
+                        && !isEmpty(password2.getText().toString())
+                        && !isEmpty(username.getText().toString())){
 
                     //check if user has a valid email address
                     if(isValidEmail(email.getText().toString())){
                         //check if passwords match
                         if(doStringsMatch(password1.getText().toString(), password2.getText().toString())){
-                            registerEmail(email.getText().toString(), password1.getText().toString());
+                            if(isValidUsername(username.getText().toString())){
+                                registerEmail(email.getText().toString(), password1.getText().toString(), username.getText().toString());
+                            } else{
+                                Toast.makeText(RegisterActivity.this, "Invalid username format", Toast.LENGTH_SHORT).show();
+                            }
                         }else{
                             Toast.makeText(RegisterActivity.this, "Passwords do not Match", Toast.LENGTH_SHORT).show();
                         }
@@ -62,14 +76,15 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerEmail(String email, String password){
+    private void registerEmail(final String email_s, String password, final String username_s){
         Log.d(TAG, "Registering Email");
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email_s, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.d(TAG, "REGISTER SUCCESSFUL");
                     sendVerificationEmail();
+                    writeNewUser(email_s, username_s);
                     FirebaseAuth.getInstance().signOut();
                     redirectLoginScreen();
                 } else{
@@ -77,6 +92,13 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void writeNewUser(String email, String username_s){
+        User databaseUser = new User(username_s, email);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(user.getUid()).setValue(databaseUser);
     }
 
     private void sendVerificationEmail(){
@@ -112,6 +134,12 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private boolean isValidUsername(String s){
+        String usernameRegex = "^[a-zA-Z0-9._-]{4,16}$";
+        Pattern pat = Pattern.compile(usernameRegex);
+        return !(s == null) && pat.matcher(s).matches();
     }
 
     private boolean doStringsMatch(String s1, String s2){
