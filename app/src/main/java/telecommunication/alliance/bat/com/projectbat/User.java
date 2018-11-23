@@ -6,7 +6,6 @@ public class User {
     String country;
     String profession;
 
-
     public User() {
     }
 

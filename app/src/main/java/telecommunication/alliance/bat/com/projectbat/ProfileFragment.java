@@ -1,6 +1,7 @@
 package telecommunication.alliance.bat.com.projectbat;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -108,12 +112,13 @@ public class ProfileFragment extends Fragment{
         email = view.findViewById(R.id.profileEmail);
         profileImage = view.findViewById(R.id.profile_image);
         logout = view.findViewById(R.id.profileLogout);
-
+        ImageView settingImage = view.findViewById(R.id.profileEdit);
 
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         user_id = userAuth.getUid();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(user_id);
+        setUpImage();
 
         userListener = new ValueEventListener() {
             @Override
@@ -149,12 +154,36 @@ public class ProfileFragment extends Fragment{
             }
         });
 
+        settingImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileSettings.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
     private void setUpImage(){
+        Log.d(TAG, user_id);
         firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference().child("images" + user_id);
+        storageReference = firebaseStorage.getReference().child(user_id + "/profileImage");
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d(TAG, uri.toString());
+                Picasso.get()
+                        .load(uri.toString())
+                        .resize(250, 250)
+                        .into(profileImage);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+        });
     }
 
     private boolean isValidProfession(String s){

@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void writeNewUser(String email, String username_s){
         Log.d(TAG, "UPLOADING IMAGE");
         String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ref = FirebaseStorage.getInstance().getReference().child("images/" + user_id);  // path of our storage in firebase
+        ref = FirebaseStorage.getInstance().getReference().child(user_id + "/profileImage");  // path of our storage in firebase
 
         Uri uri = Uri.parse("android.resource://telecommunication.alliance.bat.com.projectbat/" + R.drawable.profile_bat);
         ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
