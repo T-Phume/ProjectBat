@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
 import de.hdodenhof.circleimageview.CircleImageView;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,6 +55,7 @@ public class ProfileFragment extends Fragment{
     private TextView country;
     private TextView profession;
     private TextView email;
+    private TextView settingUsername;
 
     private ImageView logout;
 
@@ -63,7 +66,9 @@ public class ProfileFragment extends Fragment{
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
 
+
     private String user_id;
+    private String uri = "";
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -113,12 +118,12 @@ public class ProfileFragment extends Fragment{
         profileImage = view.findViewById(R.id.profile_image);
         logout = view.findViewById(R.id.profileLogout);
         ImageView settingImage = view.findViewById(R.id.profileEdit);
+        settingUsername = view.findViewById(R.id.settingsUsername);
 
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         user_id = userAuth.getUid();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(user_id);
-        setUpImage();
 
         userListener = new ValueEventListener() {
             @Override
@@ -130,6 +135,10 @@ public class ProfileFragment extends Fragment{
                     country.setText(user.getCountry());
                     profession.setText(user.getProfession());
                     email.setText(user.getEmail());
+                    if(uri == "") {
+                        uri = user.getUri();
+                        setUpImage();
+                    }
                 }
                 catch (Exception e){
                     Log.d(TAG, e.getMessage());
@@ -166,24 +175,11 @@ public class ProfileFragment extends Fragment{
     }
 
     private void setUpImage(){
-        Log.d(TAG, user_id);
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference().child(user_id + "/profileImage");
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.d(TAG, uri.toString());
-                Picasso.get()
-                        .load(uri.toString())
-                        .resize(250, 250)
-                        .into(profileImage);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, e.getMessage());
-            }
-        });
+        Log.d(TAG, uri);
+        Picasso.get()
+                .load(uri)
+                .resize(250, 250)
+                .into(profileImage);
     }
 
     private boolean isValidProfession(String s){

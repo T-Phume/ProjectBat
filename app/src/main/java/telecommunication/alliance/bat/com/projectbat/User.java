@@ -5,15 +5,25 @@ public class User {
     String email;
     String country;
     String profession;
+    String uri;
 
     public User() {
     }
 
-    public User(String username, String email){
+    public User(String username, String email, String uri){
         this.username = username;
         this.email = email;
         country = "Country";
         profession = "Profession";
+        this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public String getUsername() {

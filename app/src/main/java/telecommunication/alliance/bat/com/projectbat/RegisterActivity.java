@@ -43,6 +43,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference ref;
 
+    private String uriPlease;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,9 +107,9 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void writeNewUser(String email, String username_s){
+    private void writeNewUser(final String email, final String username_s){
         Log.d(TAG, "UPLOADING IMAGE");
-        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         ref = FirebaseStorage.getInstance().getReference().child(user_id + "/profileImage");  // path of our storage in firebase
 
         Uri uri = Uri.parse("android.resource://telecommunication.alliance.bat.com.projectbat/" + R.drawable.profile_bat);
@@ -115,20 +117,23 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d(TAG, "UPLOADED");
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
+
+                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        User databaseUser = new User(username_s, email, uri.toString());
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                        mDatabase.child("users").child(user_id).setValue(databaseUser);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, e.getMessage());
+                        Log.d(TAG,e.getMessage());
                     }
                 });
-
-        Log.d(TAG, "WRITING DATABASE");
-        User databaseUser = new User(username_s, email);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(user.getUid()).setValue(databaseUser);
+            }
+        });
     }
 
     private void sendVerificationEmail(){
