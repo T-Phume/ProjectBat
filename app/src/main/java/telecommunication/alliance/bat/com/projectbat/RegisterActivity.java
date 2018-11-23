@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,6 +29,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -45,6 +50,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private String uriPlease;
 
+    private Spinner countrySpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +63,22 @@ public class RegisterActivity extends AppCompatActivity {
         password2 = findViewById(R.id.registerPasswordInput2);
         registerButton = findViewById(R.id.registerButton);
         username = findViewById(R.id.registerUsername);
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String country;
+        for( Locale loc : locale ){
+            country = loc.getDisplayCountry();
+            if( country.length() > 0 && !countries.contains(country) ){
+                countries.add( country );
+            }
+        }
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
+        countrySpinner = findViewById(R.id.registerSpinner);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, countries);
+        countrySpinner.setAdapter(adapter);
+        countrySpinner.setSelection(adapter.getPosition("Thailand"));
 
         firebaseStorage = FirebaseStorage.getInstance();
 
@@ -97,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Log.d(TAG, "REGISTER SUCCESSFUL");
                     sendVerificationEmail();
-                    writeNewUser(email_s, username_s);
+                    writeNewUser(email_s, username_s, countrySpinner.getSelectedItem().toString());
                     FirebaseAuth.getInstance().signOut();
                     redirectLoginScreen();
                 } else{
@@ -107,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void writeNewUser(final String email, final String username_s){
+    private void writeNewUser(final String email, final String username_s, final String country_s){
         Log.d(TAG, "UPLOADING IMAGE");
         final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         ref = FirebaseStorage.getInstance().getReference().child(user_id + "/profileImage");  // path of our storage in firebase
@@ -121,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
                 ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        User databaseUser = new User(username_s, email, uri.toString());
+                        User databaseUser = new User(username_s, email, uri.toString(), country_s);
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
                         mDatabase.child("users").child(user_id).setValue(databaseUser);

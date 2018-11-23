@@ -39,7 +39,26 @@ public class LoginActivity extends AppCompatActivity {
         TextView registerButton = findViewById(R.id.loginRegisterButton);
         email = findViewById(R.id.loginEmailInput);
         password = findViewById(R.id.loginPasswordInput);
+        Button resend = findViewById(R.id.loginResendButton);
 
+        resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user != null){
+                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "EMAIL VERIFICATION SENT");
+                        } else{
+                            Log.d(TAG, "EMAIL VERIFICATION NOT SENT");
+                        }
+                    }
+                });
+            }
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,9 +94,13 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()) {
                                     Log.d(TAG, "AUTHENTICATION SUCCESSFUL");
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                    if(FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        FirebaseAuth.getInstance().signOut();
+                                    }
                                 }
                             }
                         });

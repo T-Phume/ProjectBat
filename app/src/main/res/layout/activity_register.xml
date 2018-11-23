@@ -26,9 +26,9 @@
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="@+id/registerUsername"
-        app:layout_constraintStart_toStartOf="@+id/registerUsername"
-        app:layout_constraintTop_toBottomOf="@+id/registerUsername" />
+        app:layout_constraintEnd_toEndOf="@+id/registerSpinner"
+        app:layout_constraintStart_toStartOf="@+id/registerSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/registerSpinner" />
 
     <EditText
         android:id="@+id/registerPasswordInput1"
@@ -75,5 +75,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Spinner
+        android:id="@+id/registerSpinner"
+        android:layout_width="234dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerUsername" />
 
 </android.support.constraint.ConstraintLayout>

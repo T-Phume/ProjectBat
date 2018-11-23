@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,6 +29,10 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
@@ -50,9 +58,13 @@ public class ProfileSettings extends AppCompatActivity {
     private static final int GALLERY_INTENT = 1;
 
     private TextView username;
-    private TextView country;
+    private Spinner countrySpinner;
     private TextView profession;
     private String uri = "";
+
+    private User userInstance = null;
+
+    private Button update;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +72,26 @@ public class ProfileSettings extends AppCompatActivity {
         setContentView(R.layout.activity_profile_settings);
         Log.d(TAG, "OnCreate");
 
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String country;
+        for( Locale loc : locale ){
+            country = loc.getDisplayCountry();
+            if( country.length() > 0 && !countries.contains(country) ){
+                countries.add( country );
+            }
+        }
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
+        countrySpinner = findViewById(R.id.spinner);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, countries);
+        countrySpinner.setAdapter(adapter);
+        countrySpinner.setSelection(adapter.getPosition("Thailand"));
+
         profileImage = findViewById(R.id.profile_image);
         username = findViewById(R.id.settingsUsername);
-        country = findViewById(R.id.settingsCountry);
         profession = findViewById(R.id.settingsProfession);
+        update = findViewById(R.id.settingsUpdate);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         user_id = firebaseUser.getUid();
@@ -73,12 +101,14 @@ public class ProfileSettings extends AppCompatActivity {
         userListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                username.setText(user.getUsername());
-                country.setText(user.getCountry());
-                profession.setText(user.getProfession());
-                uri = user.getUri();
-                setupImage();
+                userInstance = dataSnapshot.getValue(User.class);
+                username.setText(userInstance.getUsername());
+                countrySpinner.setSelection(adapter.getPosition(userInstance.getCountry()));
+                profession.setText(userInstance.getProfession());
+                if(!uri.equals(userInstance.getUri())) {
+                    uri = userInstance.getUri();
+                    setupImage();
+                }
             }
 
             @Override
@@ -97,6 +127,33 @@ public class ProfileSettings extends AppCompatActivity {
                 startActivityForResult(intent, GALLERY_INTENT);
             }
         });
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "UPDATING INFO");
+                String u = username.getText().toString();
+                String p = profession.getText().toString();
+                String c = countrySpinner.getSelectedItem().toString();
+
+                if(!ValidityChecker.isValidUsername(u)){ // if not valid, do something
+                    Log.d(TAG, "Invalid Username");
+                }
+
+                if(!ValidityChecker.isValidProfession(p)){
+                    Log.d(TAG, "Invalid Profession");
+                }
+
+                if(ValidityChecker.isValidUsername(u) && ValidityChecker.isValidProfession(p)){
+                    if(!u.equals(userInstance.getUsername()))
+                        databaseReference.child("username").setValue(u);
+                    if(!c.equals(userInstance.getCountry()))
+                        databaseReference.child("country").setValue(c);
+                    if(!p.equals(userInstance.getProfession()))
+                        databaseReference.child("profession").setValue(p);
+                }
+            }
+        });
     }
 
 
@@ -110,6 +167,8 @@ public class ProfileSettings extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.d(TAG, "IMAGE UPLOADED SUCCESSFULLY");
+                    Log.d(TAG, uri);
+                    Picasso.get().invalidate(uri);
                     ProfileSettings.this.setupImage();
                 }
             }).addOnFailureListener(new OnFailureListener() {

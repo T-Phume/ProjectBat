@@ -135,7 +135,7 @@ public class ProfileFragment extends Fragment{
                     country.setText(user.getCountry());
                     profession.setText(user.getProfession());
                     email.setText(user.getEmail());
-                    if(uri == "") {
+                    if(!uri.equals(user.getUri())) {
                         uri = user.getUri();
                         setUpImage();
                     }

@@ -1,5 +1,8 @@
 package telecommunication.alliance.bat.com.projectbat;
 
+import java.lang.reflect.Array;
+import java.util.regex.Pattern;
+
 public class User {
     String username;
     String email;
@@ -10,10 +13,10 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String uri){
+    public User(String username, String email, String uri, String country){
         this.username = username;
         this.email = email;
-        country = "Country";
+        this.country = country;
         profession = "Profession";
         this.uri = uri;
     }

@@ -22,6 +22,7 @@
             android:label="@string/title_activity_main" />
         <activity android:name=".ForgotPassword" />
         <activity android:name=".MakePost" />
-        <activity android:name=".ProfileSettings"></activity>
+        <activity android:name=".ProfileSettings" />
     </application>
+
 </manifest>
