@@ -1,6 +1,8 @@
 package telecommunication.alliance.bat.com.projectbat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +12,10 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.flags.Flag;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +23,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.regex.Pattern;
 
@@ -32,7 +40,8 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private TextView username;
 
-
+    private FirebaseStorage firebaseStorage;
+    private StorageReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
         password2 = findViewById(R.id.registerPasswordInput2);
         registerButton = findViewById(R.id.registerButton);
         username = findViewById(R.id.registerUsername);
+
+        firebaseStorage = FirebaseStorage.getInstance();
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +106,25 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void writeNewUser(String email, String username_s){
+        Log.d(TAG, "UPLOADING IMAGE");
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ref = FirebaseStorage.getInstance().getReference().child("images/" + user_id);  // path of our storage in firebase
+
+        Uri uri = Uri.parse("android.resource://telecommunication.alliance.bat.com.projectbat/" + R.drawable.profile_bat);
+        ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "UPLOADED");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                });
+
+        Log.d(TAG, "WRITING DATABASE");
         User databaseUser = new User(username_s, email);
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();

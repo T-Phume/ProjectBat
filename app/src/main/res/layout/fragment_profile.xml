@@ -11,45 +11,150 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/profileSecondaryLayout"
         android:layout_width="0dp"
-        android:layout_height="187dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/profileProfessionIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/profession"
+            android:src="@drawable/ic_work_orange_24dp"
+            app:layout_constraintEnd_toEndOf="@+id/profileCountryIcon"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/profileCountryIcon"
+            app:layout_constraintTop_toBottomOf="@+id/profileCountryIcon" />
+
+        <TextView
+            android:id="@+id/profileUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            android:hint="@string/username"
+            android:text="@string/username"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+        <ImageView
+            android:id="@+id/profileEmailIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/email"
+            android:src="@drawable/ic_email_orange_24dp"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/profileCountry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            android:hint="@string/country"
+            android:text="@string/country"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/profileEmail"
+            app:layout_constraintTop_toTopOf="@+id/profileCountryIcon" />
+
+        <ImageView
+            android:id="@+id/profileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="172dp"
+            android:clickable="true"
+            android:src="@drawable/ic_settings_white_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/profileLogout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/profileLogout"
+            app:layout_constraintTop_toBottomOf="@+id/profileLogout" />
+
+        <ImageView
+            android:id="@+id/profileCountryIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/country"
+            android:src="@drawable/ic_flag_orange_24dp"
+            app:layout_constraintEnd_toEndOf="@+id/profileEmailIcon"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/profileEmailIcon"
+            app:layout_constraintTop_toBottomOf="@+id/profileEmailIcon" />
+
+        <TextView
+            android:id="@+id/profileProfession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            android:hint="@string/profession"
+            android:text="@string/profession"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/profileCountry"
+            app:layout_constraintTop_toTopOf="@+id/profileProfessionIcon" />
+
+        <TextView
+            android:id="@+id/profileEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/email"
+            android:enabled="false"
+            android:hint="@string/email"
+            android:text="@string/email"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/profileUsername"
+            app:layout_constraintTop_toTopOf="@+id/profileEmailIcon" />
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/ic_person_white_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
         <ImageView
             android:id="@+id/profileLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/ic_exit_to_app_black_24dp"
             android:clickable="true"
+            android:src="@drawable/ic_exit_to_app_white_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/cat_icon"
-            app:civ_border_color="@color/colorPrimaryDark"
-            app:civ_border_width="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.202" />
+            app:layout_constraintVertical_bias="0.135" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -64,118 +169,13 @@
         app:layout_constraintTop_toBottomOf="@+id/profileSecondaryLayout"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/profileUserIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+        <GridView
+            android:layout_width="368dp"
+            android:layout_height="292dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:contentDescription="@string/username"
-            android:src="@drawable/ic_perm_identity_orange_24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/profileUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@android:drawable/screen_background_light_transparent"
-            android:enabled="false"
-            android:hint="@string/username"
-            android:text="@string/username"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/profileUserIcon"
-            app:layout_constraintTop_toTopOf="@+id/profileUserIcon" />
-
-        <ImageView
-            android:id="@+id/profileCountryIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/country"
-            android:src="@drawable/ic_flag_orange_24dp"
-            app:layout_constraintEnd_toEndOf="@+id/profileEmailIcon"
-            app:layout_constraintStart_toStartOf="@+id/profileEmailIcon"
-            app:layout_constraintTop_toBottomOf="@+id/profileEmailIcon" />
-
-        <EditText
-            android:id="@+id/profileCountry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:enabled="false"
-            android:hint="@string/country"
-            android:text="@string/country"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/profileEmail"
-            app:layout_constraintTop_toBottomOf="@+id/profileEmailIcon" />
-
-        <EditText
-            android:id="@+id/profileProfession"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:enabled="false"
-            android:hint="@string/profession"
-            android:text="@string/profession"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/profileCountry"
-            app:layout_constraintTop_toBottomOf="@+id/profileCountry" />
-
-        <EditText
-            android:id="@+id/profileEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/email"
-            android:enabled="false"
-            android:hint="@string/email"
-            android:text="@string/email"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/profileUsername"
-            app:layout_constraintTop_toTopOf="@+id/profileEmailIcon" />
-
-        <Button
-            android:id="@+id/profileEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/Edit"
-            app:layout_constraintStart_toStartOf="@+id/profileProfessionIcon"
-            app:layout_constraintTop_toBottomOf="@+id/profileProfessionIcon" />
-
-        <ImageView
-            android:id="@+id/profileProfessionIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/profession"
-            android:src="@drawable/ic_work_orange_24dp"
-            app:layout_constraintEnd_toEndOf="@+id/profileCountryIcon"
-            app:layout_constraintStart_toStartOf="@+id/profileCountryIcon"
-            app:layout_constraintTop_toBottomOf="@+id/profileCountryIcon" />
-
-        <ImageView
-            android:id="@+id/profileEmailIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/email"
-            android:src="@drawable/ic_email_orange_24dp"
-            app:layout_constraintEnd_toEndOf="@+id/profileUserIcon"
-            app:layout_constraintStart_toStartOf="@+id/profileUserIcon"
-            app:layout_constraintTop_toBottomOf="@+id/profileUserIcon" />
-
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

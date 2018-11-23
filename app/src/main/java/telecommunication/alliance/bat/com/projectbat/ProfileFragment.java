@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,8 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.regex.Pattern;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -38,12 +43,12 @@ public class ProfileFragment extends Fragment{
 
     private Boolean update = false;
 
-    private Button editButton;
+    private CircleImageView profileImage;
 
-    private EditText username;
-    private EditText country;
-    private EditText profession;
-    private EditText email;
+    private TextView username;
+    private TextView country;
+    private TextView profession;
+    private TextView email;
 
     private ImageView logout;
 
@@ -51,7 +56,10 @@ public class ProfileFragment extends Fragment{
     private ValueEventListener userListener;
     private FirebaseUser userAuth;
 
-    private ImageView profileImage;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+
+    private String user_id;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -93,18 +101,19 @@ public class ProfileFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.d(TAG, "OnCreateView");
 
-        logout = view.findViewById(R.id.profileLogout);
-        editButton = view.findViewById(R.id.profileEdit);
-
 
         username = view.findViewById(R.id.profileUsername);
         country = view.findViewById(R.id.profileCountry);
         profession = view.findViewById(R.id.profileProfession);
         email = view.findViewById(R.id.profileEmail);
         profileImage = view.findViewById(R.id.profile_image);
+        logout = view.findViewById(R.id.profileLogout);
+
+
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(userAuth.getUid());
+        user_id = userAuth.getUid();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(user_id);
 
         userListener = new ValueEventListener() {
             @Override
@@ -140,44 +149,12 @@ public class ProfileFragment extends Fragment{
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(update){
-                    String username_s = username.getText().toString();
-                    String country_s = country.getText().toString();
-                    String profession_s = profession.getText().toString();
-
-                    if(isValidUsername(username_s)){
-                        if(isValidCountryName(country_s)){
-                            if(isValidProfession(profession_s)){
-
-                            } else{
-                                Log.d(TAG, "Invalid Profession format");
-                            }
-                        } else{
-                            Log.d(TAG, "Invalid Country name format");
-                        }
-                    } else{
-                        Log.d(TAG, "Invalid Username format");
-                    }
-
-                    username.setEnabled(false);
-                    country.setEnabled(false);
-                    profession.setEnabled(false);
-                    editButton.setText("Edit");
-                    update = false;
-                } else{
-                    editButton.setText("Update");
-                    username.setEnabled(true);
-                    country.setEnabled(true);
-                    profession.setEnabled(true);
-                    update = true;
-                }
-            }
-        });
-
         return view;
+    }
+
+    private void setUpImage(){
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference().child("images" + user_id);
     }
 
     private boolean isValidProfession(String s){
