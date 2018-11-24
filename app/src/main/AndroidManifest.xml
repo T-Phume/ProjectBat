@@ -23,6 +23,10 @@
         <activity android:name=".ForgotPassword" />
         <activity android:name=".MakePost" />
         <activity android:name=".ProfileSettings" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
