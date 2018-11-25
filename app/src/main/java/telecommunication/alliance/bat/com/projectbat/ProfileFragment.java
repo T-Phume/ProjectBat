@@ -3,9 +3,12 @@ package telecommunication.alliance.bat.com.projectbat;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -70,26 +76,13 @@ public class ProfileFragment extends Fragment{
     private String user_id;
     private String uri = "";
 
+    List<Post> postList;
+    RecyclerView recyclerView;
+
+    private UserPost adapter;
+
     public ProfileFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -99,27 +92,6 @@ public class ProfileFragment extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.d(TAG, "OnCreate");
-
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        Log.d(TAG, "OnCreateView");
-
-
-        username = view.findViewById(R.id.profileUsername);
-        country = view.findViewById(R.id.profileCountry);
-        profession = view.findViewById(R.id.profileProfession);
-        email = view.findViewById(R.id.profileEmail);
-        profileImage = view.findViewById(R.id.profile_image);
-        logout = view.findViewById(R.id.profileLogout);
-        ImageView settingImage = view.findViewById(R.id.profileEdit);
-        settingUsername = view.findViewById(R.id.settingsUsername);
-
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         user_id = userAuth.getUid();
@@ -151,8 +123,35 @@ public class ProfileFragment extends Fragment{
             }
         };
 
+        postList = new ArrayList<>();
+        populateRecyclerView();
+        adapter = new UserPost(getActivity(), postList);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        Log.d(TAG, "OnCreateView");
+
+        //widget initialization
+        username = view.findViewById(R.id.profileUsername);
+        country = view.findViewById(R.id.profileCountry);
+        profession = view.findViewById(R.id.profileProfession);
+        email = view.findViewById(R.id.profileEmail);
+        profileImage = view.findViewById(R.id.profile_image);
+        logout = view.findViewById(R.id.profileLogout);
+        ImageView settingImage = view.findViewById(R.id.profileEdit);
+        settingUsername = view.findViewById(R.id.settingsUsername);
+
+
         mDatabaseRef.addValueEventListener(userListener);
 
+        //Populating recycler
+
+
+        // widget listener
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +169,15 @@ public class ProfileFragment extends Fragment{
                 startActivity(intent);
             }
         });
+
+
+        //initializing recycler and adapter
+        recyclerView = view.findViewById(R.id.profileRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         return view;
     }
@@ -200,7 +208,23 @@ public class ProfileFragment extends Fragment{
         return !(s == null) && pat.matcher(s).matches();
     }
 
+    private void populateRecyclerView(){
+        DatabaseReference ref =FirebaseDatabase.getInstance().getReference().child("feed").child(user_id);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot postData: dataSnapshot.getChildren()){
+                    postList.add(0, postData.getValue(Post.class));
+                }
+                recyclerView.setAdapter(adapter);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     @Override
     public void onDestroyView() {

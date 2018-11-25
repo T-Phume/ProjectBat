@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ProfileFragment">
+    tools:context=".ProfileFragment"
+    tools:layout_editor_absoluteY="81dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/profileSecondaryLayout"
@@ -14,7 +15,6 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -72,14 +72,15 @@
             android:id="@+id/profileEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="172dp"
+            android:layout_marginTop="8dp"
             android:clickable="true"
             android:src="@drawable/ic_settings_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/profileLogout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/profileLogout"
-            app:layout_constraintTop_toBottomOf="@+id/profileLogout" />
+            app:layout_constraintTop_toBottomOf="@+id/profileLogout"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/profileCountryIcon"
@@ -97,14 +98,17 @@
             android:id="@+id/profileProfession"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:enabled="false"
             android:hint="@string/profession"
             android:text="@string/profession"
             android:textColor="@android:color/white"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/profileCountry"
-            app:layout_constraintTop_toTopOf="@+id/profileProfessionIcon" />
+            app:layout_constraintTop_toTopOf="@+id/profileProfessionIcon"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/profileEmail"
@@ -122,8 +126,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -162,19 +166,17 @@
         android:id="@+id/profileThird_layout"
         android:layout_width="match_parent"
         android:layout_height="308dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profileSecondaryLayout"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/profileSecondaryLayout"
-        app:layout_constraintTop_toBottomOf="@+id/profileSecondaryLayout"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/profileSecondaryLayout">
 
-        <GridView
-            android:layout_width="368dp"
-            android:layout_height="292dp"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profileRecyclerView"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 

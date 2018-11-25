@@ -1,14 +1,12 @@
 package telecommunication.alliance.bat.com.projectbat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 public class FeedFragment extends Fragment {
@@ -48,7 +46,7 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        FloatingActionButton makePost = view.findViewById(R.id.feedMakePost);
+        Button makePost = view.findViewById(R.id.feedMakePost);
 
         makePost.setOnClickListener(new View.OnClickListener() {
             @Override
