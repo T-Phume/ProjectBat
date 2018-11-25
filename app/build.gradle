@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "telecommunication.alliance.bat.com.projectbat"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -30,12 +30,16 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.github.yalantis:ucrop:2.2.2'
     implementation 'id.zelory:compressor:2.1.0'
 
     implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation "com.google.firebase:firebase-auth:16.0.5"
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
+
+    implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.7.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.6.0'
 }
 apply plugin: 'com.google.gms.google-services'

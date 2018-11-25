@@ -28,8 +28,12 @@
     <string name="title">Title</string>
     <string name="desc">Description</string>
     <string name="submit">Submit Post</string>
+    <string name="Location">Location</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_profile_setting">ProfileSetting</string>
+
+    //Mapbox
+    <string name="access_token">pk.eyJ1IjoidHJhcGh1bWUiLCJhIjoiY2pvd281OWdoMWljaTNrczVsMWRybDI4dCJ9.Dsx8A8zGDbnQyCmEOrbZZg</string>
 </resources>

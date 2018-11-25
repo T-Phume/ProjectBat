@@ -1,10 +1,8 @@
 package telecommunication.alliance.bat.com.projectbat;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,26 +24,22 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
-import com.yalantis.ucrop.UCrop;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 
 public class ProfileSettings extends AppCompatActivity {
     private static final String TAG = "PROFILE_SETTINGS";
 
-    private CircleImageView setUpImage;
-
     private String user_id;
 
-    private Bitmap compressedImageFile;
-    private CircleImageView imageView;
 
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
@@ -54,8 +48,6 @@ public class ProfileSettings extends AppCompatActivity {
     private ValueEventListener userListener;
 
     private CircleImageView profileImage;
-
-    private static final int GALLERY_INTENT = 1;
 
     private TextView username;
     private Spinner countrySpinner;
@@ -122,9 +114,7 @@ public class ProfileSettings extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, GALLERY_INTENT);
+                Crop.pickImage(ProfileSettings.this);
             }
         });
 
@@ -160,31 +150,50 @@ public class ProfileSettings extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            Uri URI = data.getData();
+        if(resultCode == RESULT_OK){
+            if(requestCode == Crop.REQUEST_PICK){
+                Uri sourceUri = data.getData();
+                Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "cropped"));
 
-            storageReference.putFile(URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.d(TAG, "IMAGE UPLOADED SUCCESSFULLY");
-                    Log.d(TAG, uri);
-                    Picasso.get().invalidate(uri);
-                    ProfileSettings.this.setupImage();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "IMAGE UPLOAD FAILED");
-                }
-            });
+                Crop.of(sourceUri, destinationUri).asSquare().start(this);
+            } else if(requestCode == Crop.REQUEST_CROP){
+                handle_crop(resultCode, data);
+            }
         }
+    }
+
+    private void handle_crop(int code, Intent result){
+        if(code == RESULT_OK){
+            Uri output = Crop.getOutput(result);
+            update_image(output);
+            Picasso.get().invalidate(output);
+            setupImage();
+        }
+    }
+
+    private void update_image(Uri URI){
+        storageReference.putFile(URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "IMAGE UPLOADED SUCCESSFULLY");
+                Log.d(TAG, uri);
+                Picasso.get().invalidate(uri);
+                ProfileSettings.this.setupImage();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "IMAGE UPLOAD FAILED");
+            }
+        });
     }
 
     private void setupImage(){
         Log.d(TAG, "LOADING IMAGE");
         Picasso.get()
                 .load(uri)
-                .resize(500, 500)
+                .fit()
+                .centerCrop()
                 .into(profileImage);
     }
 
