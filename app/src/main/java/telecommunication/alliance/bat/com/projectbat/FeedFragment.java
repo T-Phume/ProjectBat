@@ -47,6 +47,13 @@ public class FeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         Button makePost = view.findViewById(R.id.feedMakePost);
+        view.findViewById(R.id.feedFindContact).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactActivity.class);
+                startActivity(intent);
+            }
+        });
 
         makePost.setOnClickListener(new View.OnClickListener() {
             @Override

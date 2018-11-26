@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,6 +45,7 @@ public class ProfileSettings extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
+    private DatabaseReference searchRef;
 
     private ValueEventListener userListener;
 
@@ -108,7 +110,6 @@ public class ProfileSettings extends AppCompatActivity {
                 Log.d(TAG, "FAIL TO READ VALUE");
             }
         };
-
         databaseReference.addValueEventListener(userListener);
 
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -122,9 +123,9 @@ public class ProfileSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "UPDATING INFO");
-                String u = username.getText().toString();
-                String p = profession.getText().toString();
-                String c = countrySpinner.getSelectedItem().toString();
+                final String u = username.getText().toString();
+                final String p = profession.getText().toString();
+                final String c = countrySpinner.getSelectedItem().toString();
 
                 if(!ValidityChecker.isValidUsername(u)){ // if not valid, do something
                     Log.d(TAG, "Invalid Username");
@@ -135,12 +136,29 @@ public class ProfileSettings extends AppCompatActivity {
                 }
 
                 if(ValidityChecker.isValidUsername(u) && ValidityChecker.isValidProfession(p)){
-                    if(!u.equals(userInstance.getUsername()))
-                        databaseReference.child("username").setValue(u);
-                    if(!c.equals(userInstance.getCountry()))
-                        databaseReference.child("country").setValue(c);
-                    if(!p.equals(userInstance.getProfession()))
-                        databaseReference.child("profession").setValue(p);
+                    searchRef = FirebaseDatabase.getInstance().getReference().child("search");
+                    searchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(!dataSnapshot.hasChild(u)){
+                                searchRef.child(userInstance.getUsername()).setValue(null);
+                                searchRef.child(u).setValue(firebaseUser.getUid());
+                                if(!u.equals(userInstance.getUsername()))
+                                    databaseReference.child("username").setValue(u);
+                                if(!c.equals(userInstance.getCountry()))
+                                    databaseReference.child("country").setValue(c);
+                                if(!p.equals(userInstance.getProfession()))
+                                    databaseReference.child("profession").setValue(p);
+                            } else{
+                                Toast.makeText(ProfileSettings.this, "Username already exist", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
         });
