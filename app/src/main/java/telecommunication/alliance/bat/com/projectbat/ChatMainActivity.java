@@ -1,8 +1,10 @@
 package telecommunication.alliance.bat.com.projectbat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -76,6 +78,29 @@ public class ChatMainActivity extends AppCompatActivity {
         });
 
 
+        chatRooms.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                root.child(((TextView)view.findViewById(R.id.nameLabel)).getText().toString()).removeValue();
+
+                for (Person p : allRoom){
+
+                    if(p.getName() == ((TextView)view.findViewById(R.id.nameLabel)).getText().toString()){
+                        allRoom.remove(p);
+                        break;
+                    }
+
+
+                }
+
+                roomAdapter1.notifyDataSetChanged();
+
+
+                return false;
+            }
+        });
+
+
 //        textWriteRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -90,7 +115,6 @@ public class ChatMainActivity extends AppCompatActivity {
 //        });
 
     }
-
 
     @Override
     protected void onStart() {
