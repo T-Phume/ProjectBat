@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MakePost">
+
+    <EditText
+        android:id="@+id/makePostFeeling"
+        android:layout_width="0dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_outline"
+        android:ems="10"
+        android:hint="Feeling like..."
+        android:inputType="textMultiLine"
+        android:maxLength="50"
+        android:padding="15dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/makePostTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/makePostTitle"
+        app:layout_constraintTop_toBottomOf="@+id/makePostTitle" />
+
+    <ImageButton
+        android:id="@+id/makePostImage"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/transparent" />
+
+    <EditText
+        android:id="@+id/makePostTitle"
+        android:layout_width="0dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_outline"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        android:maxLength="25"
+        android:padding="15dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/makePostImage"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/makePostImage"
+        app:layout_constraintTop_toBottomOf="@+id/makePostImage" />
+
+    <Button
+        android:id="@+id/makePostButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/submit"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/makePostMap"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_outline"
+        android:clickable="true"
+        android:hint="@string/Location"
+        android:padding="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/makePostButton"
+        app:layout_constraintEnd_toEndOf="@+id/makePostFeeling"
+        app:layout_constraintStart_toStartOf="@+id/makePostFeeling"
+        app:layout_constraintTop_toBottomOf="@+id/makePostFeeling"
+        app:layout_constraintVertical_bias="0.0" />
+
+</android.support.constraint.ConstraintLayout>
