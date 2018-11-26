@@ -115,7 +115,8 @@ public class FeedFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot childrenSnapshot: dataSnapshot.getChildren()) {
-
+                    Friend temp = childrenSnapshot.getValue(Friend.class);
+                    userList.add(temp);
                 }
                 recyclerView.setAdapter(adapter);
             }
