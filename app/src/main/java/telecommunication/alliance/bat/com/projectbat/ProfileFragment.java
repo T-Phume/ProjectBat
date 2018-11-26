@@ -172,30 +172,13 @@ public class ProfileFragment extends Fragment{
         return view;
     }
 
-    private void setUpImage(){
+    private void setUpImage() {
         Log.d(TAG, uri);
+        Picasso.get().invalidate(uri);
         Picasso.get()
                 .load(uri)
-                .resize(250, 250)
+                .fit()
                 .into(profileImage);
-    }
-
-    private boolean isValidProfession(String s){
-        String countryRegex = "^[a-zA-Z0-9]{4,30}$";
-        Pattern pat = Pattern.compile(countryRegex);
-        return !(s == null) && pat.matcher(s).matches();
-    }
-
-    private boolean isValidCountryName(String s){
-        String countryRegex = "^[a-zA-Z0-9]{4,20}$";
-        Pattern pat = Pattern.compile(countryRegex);
-        return !(s == null) && pat.matcher(s).matches();
-    }
-
-    private boolean isValidUsername(String s){
-        String usernameRegex = "^[a-zA-Z0-9._-]{4,16}$";
-        Pattern pat = Pattern.compile(usernameRegex);
-        return !(s == null) && pat.matcher(s).matches();
     }
 
     private void populateRecyclerView(){
