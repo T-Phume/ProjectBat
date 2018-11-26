@@ -96,7 +96,7 @@ public class ProfileSettings extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userInstance = dataSnapshot.getValue(User.class);
-                username.setText(userInstance.getUsername());
+                username.setText(userInstance.getDisplayName());
                 countrySpinner.setSelection(adapter.getPosition(userInstance.getCountry()));
                 profession.setText(userInstance.getProfession());
                 if(!uri.equals(userInstance.getUri())) {
@@ -128,7 +128,7 @@ public class ProfileSettings extends AppCompatActivity {
                 final String c = countrySpinner.getSelectedItem().toString();
 
                 if(!ValidityChecker.isValidUsername(u)){ // if not valid, do something
-                    Log.d(TAG, "Invalid Username");
+                    Log.d(TAG, "Invalid display name");
                 }
 
                 if(!ValidityChecker.isValidProfession(p)){
@@ -136,29 +136,12 @@ public class ProfileSettings extends AppCompatActivity {
                 }
 
                 if(ValidityChecker.isValidUsername(u) && ValidityChecker.isValidProfession(p)){
-                    searchRef = FirebaseDatabase.getInstance().getReference().child("search");
-                    searchRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(!dataSnapshot.hasChild(u)){
-                                searchRef.child(userInstance.getUsername()).setValue(null);
-                                searchRef.child(u).setValue(firebaseUser.getUid());
-                                if(!u.equals(userInstance.getUsername()))
-                                    databaseReference.child("username").setValue(u);
-                                if(!c.equals(userInstance.getCountry()))
-                                    databaseReference.child("country").setValue(c);
-                                if(!p.equals(userInstance.getProfession()))
-                                    databaseReference.child("profession").setValue(p);
-                            } else{
-                                Toast.makeText(ProfileSettings.this, "Username already exist", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                    if(!u.equals(userInstance.getUsername()))
+                        databaseReference.child("displayname").setValue(u);
+                    if(!c.equals(userInstance.getCountry()))
+                        databaseReference.child("country").setValue(c);
+                    if(!p.equals(userInstance.getProfession()))
+                        databaseReference.child("profession").setValue(p);
                 }
             }
         });

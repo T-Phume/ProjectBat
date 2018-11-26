@@ -103,7 +103,7 @@ public class ProfileFragment extends Fragment{
                 Log.d(TAG, "DATA CHANGE");
                 try {
                     User user = dataSnapshot.getValue(User.class);
-                    username.setText(user.getUsername());
+                    username.setText(user.getDisplayName());
                     country.setText(user.getCountry());
                     profession.setText(user.getProfession());
                     email.setText(user.getEmail());

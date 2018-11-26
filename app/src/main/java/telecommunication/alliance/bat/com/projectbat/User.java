@@ -9,7 +9,7 @@ public class User {
     private String country;
     private String profession;
     private String uri;
-    private ArrayList<String> friends;
+    private String displayname;
 
     public User() {
     }
@@ -20,15 +20,15 @@ public class User {
         this.country = country;
         profession = "Profession";
         this.uri = uri;
-        friends = new ArrayList<>();
+        this.displayname = username;
     }
 
-    public ArrayList<String> getFriends() {
-        return friends;
+    public String getDisplayName() {
+        return displayname;
     }
 
-    public void setFriends(ArrayList<String> friends) {
-        this.friends = friends;
+    public void setDisplayName(String displayName) {
+        this.displayname = displayName;
     }
 
     public String getUri() {

@@ -146,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d(TAG, "REGISTER SUCCESSFUL");
                     sendVerificationEmail();
                     writeNewUser(email_s, username_s, countrySpinner.getSelectedItem().toString());
-                    searchRef.child(username.getText().toString()).setValue(username_s);
+                    searchRef.child(username.getText().toString()).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     FirebaseAuth.getInstance().signOut();
                     redirectLoginScreen();
                 } else{

@@ -71,7 +71,7 @@ public class ContactActivity extends AppCompatActivity {
                                 userRef.child(text.getText().toString()).setValue(friend_id);
                                 friend.child(friend_id).child(username).setValue(firebaseUser.getUid());
                             } else {
-                                Toast.makeText(ContactActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ContactActivity.this, "Already Friend with this person.", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -80,6 +80,8 @@ public class ContactActivity extends AppCompatActivity {
 
                         }
                     });
+                } else{
+                    Toast.makeText(ContactActivity.this, "Username does not exist.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
