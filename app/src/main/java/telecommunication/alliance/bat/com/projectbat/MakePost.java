@@ -1,14 +1,17 @@
 package telecommunication.alliance.bat.com.projectbat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +31,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 
 public class MakePost extends AppCompatActivity {
+    private static final String TAG = "MAKEPOST";
+
     private ImageButton imageButton;
     private EditText title;
     private EditText feeling;
@@ -44,6 +49,7 @@ public class MakePost extends AppCompatActivity {
     private String l;
 
     private TextView location;
+    private ProgressBar mProgressBar;
 
     private int MAPCODE = 1;
 
@@ -102,7 +108,9 @@ public class MakePost extends AppCompatActivity {
                 if(f.length() == 0)
                     f = "Unknown";
                 if(l.length() == 0)
-                    l = "Unkown";
+                    l = "Somewhere over the rainbow.";
+
+                Log.d(TAG, Long.toString(index));
 
                 final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(user.getUid()).child(Long.toString(index));
                 storageReference.putFile(uploadUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -112,8 +120,12 @@ public class MakePost extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 Post post = new Post(uri.toString(), t, f, l);
-                                databaseReference.child(Long.toString(index)).setValue(post);
-                                finish();
+                                databaseReference.child(Long.toString(index)).setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        finish();
+                                    }
+                                });
                             }
                         });
                     }
@@ -156,5 +168,14 @@ public class MakePost extends AppCompatActivity {
                 location.setText(d.toString());
             }
         }
+    }
+
+    private void showDialog(){
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideDialog(){
+        if(mProgressBar.getVisibility() == View.VISIBLE)
+            mProgressBar.setVisibility(View.INVISIBLE);
     }
 }

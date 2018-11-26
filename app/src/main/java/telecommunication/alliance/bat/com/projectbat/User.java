@@ -1,14 +1,15 @@
 package telecommunication.alliance.bat.com.projectbat;
 
-import java.lang.reflect.Array;
-import java.util.regex.Pattern;
+
+import java.util.ArrayList;
 
 public class User {
-    String username;
-    String email;
-    String country;
-    String profession;
-    String uri;
+    private String username;
+    private String email;
+    private String country;
+    private String profession;
+    private String uri;
+    private String displayname;
 
     public User() {
     }
@@ -19,6 +20,15 @@ public class User {
         this.country = country;
         profession = "Profession";
         this.uri = uri;
+        this.displayname = username;
+    }
+
+    public String getDisplayName() {
+        return displayname;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayname = displayName;
     }
 
     public String getUri() {

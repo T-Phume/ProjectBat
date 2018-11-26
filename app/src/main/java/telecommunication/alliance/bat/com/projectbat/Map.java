@@ -38,7 +38,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     private MapboxMap mapboxMap;
     private String geojsonSourceLayerId = "geojsonSourceLayerId";
     private String symbolIconId = "symbolIconId";
-    private String location = "Unknown";
+    private String location = "Somewhere over the rainbow.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

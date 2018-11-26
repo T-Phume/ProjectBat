@@ -1,22 +1,18 @@
 package telecommunication.alliance.bat.com.projectbat;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,12 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -70,26 +66,13 @@ public class ProfileFragment extends Fragment{
     private String user_id;
     private String uri = "";
 
+    List<Post> postList;
+    RecyclerView recyclerView;
+
+    private UserPost adapter;
+
     public ProfileFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -99,27 +82,6 @@ public class ProfileFragment extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.d(TAG, "OnCreate");
-
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        Log.d(TAG, "OnCreateView");
-
-
-        username = view.findViewById(R.id.profileUsername);
-        country = view.findViewById(R.id.profileCountry);
-        profession = view.findViewById(R.id.profileProfession);
-        email = view.findViewById(R.id.profileEmail);
-        profileImage = view.findViewById(R.id.profile_image);
-        logout = view.findViewById(R.id.profileLogout);
-        ImageView settingImage = view.findViewById(R.id.profileEdit);
-        settingUsername = view.findViewById(R.id.settingsUsername);
-
 
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         user_id = userAuth.getUid();
@@ -131,7 +93,7 @@ public class ProfileFragment extends Fragment{
                 Log.d(TAG, "DATA CHANGE");
                 try {
                     User user = dataSnapshot.getValue(User.class);
-                    username.setText(user.getUsername());
+                    username.setText(user.getDisplayName());
                     country.setText(user.getCountry());
                     profession.setText(user.getProfession());
                     email.setText(user.getEmail());
@@ -151,8 +113,35 @@ public class ProfileFragment extends Fragment{
             }
         };
 
+        postList = new ArrayList<>();
+        populateRecyclerView();
+        adapter = new UserPost(getActivity(), postList);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        Log.d(TAG, "OnCreateView");
+
+        //widget initialization
+        username = view.findViewById(R.id.friendUsername);
+        country = view.findViewById(R.id.friendCountry);
+        profession = view.findViewById(R.id.profileProfession);
+        email = view.findViewById(R.id.friendEmail);
+        profileImage = view.findViewById(R.id.friend_profile_image);
+        logout = view.findViewById(R.id.profileLogout);
+        ImageView settingImage = view.findViewById(R.id.profileEdit);
+        settingUsername = view.findViewById(R.id.settingsUsername);
+
+
         mDatabaseRef.addValueEventListener(userListener);
 
+        //Populating recycler
+
+
+        // widget listener
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,36 +160,45 @@ public class ProfileFragment extends Fragment{
             }
         });
 
+
+        //initializing recycler and adapter
+        recyclerView = view.findViewById(R.id.profileRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         return view;
     }
 
-    private void setUpImage(){
+    private void setUpImage() {
         Log.d(TAG, uri);
+        Picasso.get().invalidate(uri);
         Picasso.get()
                 .load(uri)
-                .resize(250, 250)
+                .fit()
                 .into(profileImage);
     }
 
-    private boolean isValidProfession(String s){
-        String countryRegex = "^[a-zA-Z0-9]{4,30}$";
-        Pattern pat = Pattern.compile(countryRegex);
-        return !(s == null) && pat.matcher(s).matches();
+    private void populateRecyclerView(){
+        DatabaseReference ref =FirebaseDatabase.getInstance().getReference().child("feed").child(user_id);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for(DataSnapshot postData: dataSnapshot.getChildren()){
+                    postList.add(0, postData.getValue(Post.class));
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
-
-    private boolean isValidCountryName(String s){
-        String countryRegex = "^[a-zA-Z0-9]{4,20}$";
-        Pattern pat = Pattern.compile(countryRegex);
-        return !(s == null) && pat.matcher(s).matches();
-    }
-
-    private boolean isValidUsername(String s){
-        String usernameRegex = "^[a-zA-Z0-9._-]{4,16}$";
-        Pattern pat = Pattern.compile(usernameRegex);
-        return !(s == null) && pat.matcher(s).matches();
-    }
-
-
 
     @Override
     public void onDestroyView() {

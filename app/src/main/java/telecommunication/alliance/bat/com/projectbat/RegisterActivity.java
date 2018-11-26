@@ -1,8 +1,10 @@
 package telecommunication.alliance.bat.com.projectbat;
 
+import android.arch.persistence.room.Database;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +25,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,12 +50,15 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private TextView username;
 
+    private String searchURI;
+
     private FirebaseStorage firebaseStorage;
     private StorageReference ref;
 
     private String uriPlease;
 
     private Spinner countrySpinner;
+    private DatabaseReference searchRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                         //check if passwords match
                         if(doStringsMatch(password1.getText().toString(), password2.getText().toString())){
                             if(isValidUsername(username.getText().toString())){
-                                registerEmail(email.getText().toString(), password1.getText().toString(), username.getText().toString());
+                                setUpReference();
                             } else{
                                 Toast.makeText(RegisterActivity.this, "Invalid username format", Toast.LENGTH_SHORT).show();
                             }
@@ -112,6 +120,25 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpReference(){
+        searchRef = FirebaseDatabase.getInstance().getReference().child("search");
+        searchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.hasChild(username.getText().toString())){
+                    registerEmail(email.getText().toString(), password1.getText().toString(), username.getText().toString());
+                } else{
+                    Toast.makeText(RegisterActivity.this, "Username already exist", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void registerEmail(final String email_s, String password, final String username_s){
         Log.d(TAG, "Registering Email");
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email_s, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -121,6 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d(TAG, "REGISTER SUCCESSFUL");
                     sendVerificationEmail();
                     writeNewUser(email_s, username_s, countrySpinner.getSelectedItem().toString());
+                    String temp = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    Friend f = new Friend(username.getText().toString(), searchURI, temp);
+                    searchRef.child(username.getText().toString()).setValue(f);
                     FirebaseAuth.getInstance().signOut();
                     redirectLoginScreen();
                 } else{
@@ -148,6 +178,7 @@ public class RegisterActivity extends AppCompatActivity {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
                         mDatabase.child("users").child(user_id).setValue(databaseUser);
+                        searchURI = uri.toString();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity{
                 .add(R.id.fragment_container, inboxFragment)
                 .add(R.id.fragment_container, profileFragment)
                 .hide(profileFragment)
+                .hide(inboxFragment)
                 .show(feedFragment).commit();
 
         BottomNavigationView navigation = findViewById(R.id.navigation);

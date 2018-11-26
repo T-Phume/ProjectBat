@@ -44,6 +44,7 @@ public class ProfileSettings extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
+    private DatabaseReference searchRef;
 
     private ValueEventListener userListener;
 
@@ -80,7 +81,7 @@ public class ProfileSettings extends AppCompatActivity {
         countrySpinner.setAdapter(adapter);
         countrySpinner.setSelection(adapter.getPosition("Thailand"));
 
-        profileImage = findViewById(R.id.profile_image);
+        profileImage = findViewById(R.id.friend_profile_image);
         username = findViewById(R.id.settingsUsername);
         profession = findViewById(R.id.settingsProfession);
         update = findViewById(R.id.settingsUpdate);
@@ -94,7 +95,7 @@ public class ProfileSettings extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userInstance = dataSnapshot.getValue(User.class);
-                username.setText(userInstance.getUsername());
+                username.setText(userInstance.getDisplayName());
                 countrySpinner.setSelection(adapter.getPosition(userInstance.getCountry()));
                 profession.setText(userInstance.getProfession());
                 if(!uri.equals(userInstance.getUri())) {
@@ -108,7 +109,6 @@ public class ProfileSettings extends AppCompatActivity {
                 Log.d(TAG, "FAIL TO READ VALUE");
             }
         };
-
         databaseReference.addValueEventListener(userListener);
 
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -122,12 +122,12 @@ public class ProfileSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "UPDATING INFO");
-                String u = username.getText().toString();
-                String p = profession.getText().toString();
-                String c = countrySpinner.getSelectedItem().toString();
+                final String u = username.getText().toString();
+                final String p = profession.getText().toString();
+                final String c = countrySpinner.getSelectedItem().toString();
 
                 if(!ValidityChecker.isValidUsername(u)){ // if not valid, do something
-                    Log.d(TAG, "Invalid Username");
+                    Log.d(TAG, "Invalid display name");
                 }
 
                 if(!ValidityChecker.isValidProfession(p)){
@@ -136,7 +136,7 @@ public class ProfileSettings extends AppCompatActivity {
 
                 if(ValidityChecker.isValidUsername(u) && ValidityChecker.isValidProfession(p)){
                     if(!u.equals(userInstance.getUsername()))
-                        databaseReference.child("username").setValue(u);
+                        databaseReference.child("displayname").setValue(u);
                     if(!c.equals(userInstance.getCountry()))
                         databaseReference.child("country").setValue(c);
                     if(!p.equals(userInstance.getProfession()))
