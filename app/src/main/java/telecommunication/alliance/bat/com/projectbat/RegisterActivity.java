@@ -50,6 +50,8 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private TextView username;
 
+    private String searchURI;
+
     private FirebaseStorage firebaseStorage;
     private StorageReference ref;
 
@@ -146,7 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d(TAG, "REGISTER SUCCESSFUL");
                     sendVerificationEmail();
                     writeNewUser(email_s, username_s, countrySpinner.getSelectedItem().toString());
-                    searchRef.child(username.getText().toString()).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    String temp = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    Friend f = new Friend(username.getText().toString(), searchURI, temp);
+                    searchRef.child(username.getText().toString()).setValue(f);
                     FirebaseAuth.getInstance().signOut();
                     redirectLoginScreen();
                 } else{
@@ -174,6 +178,7 @@ public class RegisterActivity extends AppCompatActivity {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
                         mDatabase.child("users").child(user_id).setValue(databaseUser);
+                        searchURI = uri.toString();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

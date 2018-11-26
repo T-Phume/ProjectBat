@@ -15,10 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Belal on 10/18/2017.
- */
-
 
 public class UserPost extends RecyclerView.Adapter<UserPost.ProductViewHolder> {
     private Context mCtx;

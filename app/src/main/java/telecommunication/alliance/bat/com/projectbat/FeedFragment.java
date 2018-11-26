@@ -2,11 +2,28 @@ package telecommunication.alliance.bat.com.projectbat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FeedFragment extends Fragment {
@@ -14,10 +31,21 @@ public class FeedFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "FEEEEEEEEED";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FirebaseUser firebaseUser;
+    private DatabaseReference databaseReference;
+
+    private RecyclerView recyclerView;
+    private FriendAdapter adapter;
+
+    private ValueEventListener valueEventListener;
+
+    private List<Friend> userList;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -40,6 +68,15 @@ public class FeedFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.d(TAG, "onCreate: ");
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("friend").child(firebaseUser.getUid());
+        Log.d(TAG, "onCreate: " + firebaseUser.getUid());
+        userList = new ArrayList<>();
+        populateRecyclerView();
+        adapter = new FriendAdapter(getActivity(), userList);
+
     }
 
     @Override
@@ -63,7 +100,31 @@ public class FeedFragment extends Fragment {
             }
         });
 
+        Log.d(TAG, "onCreateView: ");
+        recyclerView = view.findViewById(R.id.feedRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        Log.d(TAG, Integer.toString(adapter.getItemCount()));
         return view;
+    }
+
+    private void populateRecyclerView(){
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot childrenSnapshot: dataSnapshot.getChildren()) {
+
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

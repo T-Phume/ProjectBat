@@ -1,7 +1,5 @@
 package telecommunication.alliance.bat.com.projectbat;
 
-import android.arch.persistence.room.Database;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.common.data.DataBufferSafeParcelable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ContactActivity extends AppCompatActivity {
+    private static final String TAG = "CONTACTTTTTT";
     private Button button;
     private EditText text;
 
@@ -31,6 +29,8 @@ public class ContactActivity extends AppCompatActivity {
 
     private FirebaseUser firebaseUser;
     private String username;
+
+    private User us;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,10 @@ public class ContactActivity extends AppCompatActivity {
         button = findViewById(R.id.contactSearch);
         text = findViewById(R.id.contactUsername);
 
-        FirebaseDatabase.getInstance().getReference().child("users").child(firebaseUser.getUid()).child("username").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                username = dataSnapshot.getValue(String.class);
-                Log.d("CONTACT", username);
+                us = dataSnapshot.getValue(User.class);
             }
 
             @Override
@@ -67,9 +66,12 @@ public class ContactActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.hasChild(text.getText().toString())) {
-                                String friend_id = dataSnapshot.child(text.getText().toString()).getValue(String.class);
-                                userRef.child(text.getText().toString()).setValue(friend_id);
-                                friend.child(friend_id).child(username).setValue(firebaseUser.getUid());
+                                Friend f = dataSnapshot.child(text.getText().toString()).getValue(Friend.class);
+                                userRef.child(text.getText().toString()).setValue(f);
+                                Friend i = new Friend(us.getUsername(), us.getUri(), firebaseUser.getUid());
+                                Log.d(TAG, "onDataChange: " + f.getName());
+                                String temp = f.getName();
+                                friend.child(f.getRef()).child(us.getUsername()).setValue(i);
                             } else {
                                 Toast.makeText(ContactActivity.this, "Already Friend with this person.", Toast.LENGTH_SHORT).show();
                             }

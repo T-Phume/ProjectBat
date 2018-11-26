@@ -1,11 +1,8 @@
 package telecommunication.alliance.bat.com.projectbat;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -38,8 +30,6 @@ import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -140,7 +130,7 @@ public class ProfileFragment extends Fragment{
         country = view.findViewById(R.id.profileCountry);
         profession = view.findViewById(R.id.profileProfession);
         email = view.findViewById(R.id.profileEmail);
-        profileImage = view.findViewById(R.id.profile_image);
+        profileImage = view.findViewById(R.id.friend_image);
         logout = view.findViewById(R.id.profileLogout);
         ImageView settingImage = view.findViewById(R.id.profileEdit);
         settingUsername = view.findViewById(R.id.settingsUsername);
