@@ -119,8 +119,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void setUpReference(){
-        searchRef = FirebaseDatabase.getInstance().getReference();
-        searchRef.addValueEventListener(new ValueEventListener() {
+        searchRef = FirebaseDatabase.getInstance().getReference().child("search");
+        searchRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.hasChild(username.getText().toString())){

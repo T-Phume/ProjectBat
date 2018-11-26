@@ -38,7 +38,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Search"
+        android:text="Add"
         app:layout_constraintEnd_toEndOf="@+id/contactUsername"
         app:layout_constraintStart_toStartOf="@+id/contactUsername"
         app:layout_constraintTop_toBottomOf="@+id/contactUsername" />

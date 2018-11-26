@@ -49,7 +49,8 @@ public class ContactActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("users").child(firebaseUser.getUid()).child("username").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                username = dataSnapshot.getValue().toString();
+                username = dataSnapshot.getValue(String.class);
+                Log.d("CONTACT", username);
             }
 
             @Override
@@ -61,35 +62,26 @@ public class ContactActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(text.getText().toString())){
-                            Log.d("CONTACT", "IN");
-                            for(DataSnapshot childSnapshot: dataSnapshot.getChildren()){
-                                String toFriend = childSnapshot.getKey();
-                                Log.d("CONTACT", toFriend);
-                                if(toFriend.equals(text.getText().toString())) {
-                                    String help = childSnapshot.getValue(String.class);
-                                    userRef.push().setValue(childSnapshot.getValue());
-                                    DatabaseReference reffy = FirebaseDatabase.getInstance().getReference().child("friend").child(help);
-                                    reffy.push().setValue(firebaseUser.getUid());
-                                    Log.d("CONTACT", help);
-                                    break;
-                                }
+                if (!text.getText().toString().equals(username)) {
+                    searchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild(text.getText().toString())) {
+                                String friend_id = dataSnapshot.child(text.getText().toString()).getValue(String.class);
+                                userRef.child(text.getText().toString()).setValue(friend_id);
+                                friend.child(friend_id).child(username).setValue(firebaseUser.getUid());
+                            } else {
+                                Toast.makeText(ContactActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                             }
-                        } else{
-                            Toast.makeText(ContactActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
-
     }
 }
