@@ -25,17 +25,16 @@ public class ChatMainActivity extends AppCompatActivity {
     private ListView chatRooms;
     private EditText descArea;
     private ArrayList<Person> allRoom = new ArrayList<>();
-    private ArrayList<String> readNameList = new ArrayList<>();
-    private ArrayList<String> readDescList = new ArrayList<>();
+
 
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("rooms");
-    private RoomListAdaptor roomAdapter;
+    private RoomListAdaptor roomAdapter1;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_2);
         super.onStart();
 
         descArea = (EditText) findViewById(R.id.descEnter);
@@ -44,10 +43,9 @@ public class ChatMainActivity extends AppCompatActivity {
         chatRooms = (ListView) findViewById(R.id.roomList);
 
 
-        roomAdapter = new RoomListAdaptor(this, R.layout.roomlayout, allRoom);
+        roomAdapter1 = new RoomListAdaptor(this,R.layout.roomlayout,allRoom);
 
-        chatRooms.setAdapter(roomAdapter);
-
+        chatRooms.setAdapter(roomAdapter1);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +103,7 @@ public class ChatMainActivity extends AppCompatActivity {
                     Person p = ds.getValue(Person.class);
                     allRoom.add(p);
                 }
-                roomAdapter.notifyDataSetChanged();
+                roomAdapter1.notifyDataSetChanged();
             }
 
             @Override
