@@ -81,7 +81,7 @@ public class ProfileSettings extends AppCompatActivity {
         countrySpinner.setAdapter(adapter);
         countrySpinner.setSelection(adapter.getPosition("Thailand"));
 
-        profileImage = findViewById(R.id.friend_image);
+        profileImage = findViewById(R.id.friend_profile_image);
         username = findViewById(R.id.settingsUsername);
         profession = findViewById(R.id.settingsProfession);
         update = findViewById(R.id.settingsUpdate);

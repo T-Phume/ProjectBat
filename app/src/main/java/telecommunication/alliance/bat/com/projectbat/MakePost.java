@@ -1,5 +1,6 @@
 package telecommunication.alliance.bat.com.projectbat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +49,7 @@ public class MakePost extends AppCompatActivity {
     private String l;
 
     private TextView location;
+    private ProgressBar mProgressBar;
 
     private int MAPCODE = 1;
 
@@ -117,8 +120,12 @@ public class MakePost extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 Post post = new Post(uri.toString(), t, f, l);
-                                databaseReference.child(Long.toString(index)).setValue(post);
-                                finish();
+                                databaseReference.child(Long.toString(index)).setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        finish();
+                                    }
+                                });
                             }
                         });
                     }
@@ -161,5 +168,14 @@ public class MakePost extends AppCompatActivity {
                 location.setText(d.toString());
             }
         }
+    }
+
+    private void showDialog(){
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideDialog(){
+        if(mProgressBar.getVisibility() == View.VISIBLE)
+            mProgressBar.setVisibility(View.INVISIBLE);
     }
 }

@@ -27,7 +27,8 @@
         <activity android:name=".ProfileSettings" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity android:name=".Map" />
-        <activity android:name=".ContactActivity"></activity>
+        <activity android:name=".ContactActivity" />
+        <activity android:name=".friendProfile"></activity>
     </application>
 
 </manifest>

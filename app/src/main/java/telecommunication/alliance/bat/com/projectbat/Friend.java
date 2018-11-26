@@ -1,6 +1,9 @@
 package telecommunication.alliance.bat.com.projectbat;
 
-public class Friend {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Friend{
     String name;
     String uri;
     String ref;

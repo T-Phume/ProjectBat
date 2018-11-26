@@ -126,11 +126,11 @@ public class ProfileFragment extends Fragment{
         Log.d(TAG, "OnCreateView");
 
         //widget initialization
-        username = view.findViewById(R.id.profileUsername);
-        country = view.findViewById(R.id.profileCountry);
+        username = view.findViewById(R.id.friendUsername);
+        country = view.findViewById(R.id.friendCountry);
         profession = view.findViewById(R.id.profileProfession);
-        email = view.findViewById(R.id.profileEmail);
-        profileImage = view.findViewById(R.id.friend_image);
+        email = view.findViewById(R.id.friendEmail);
+        profileImage = view.findViewById(R.id.friend_profile_image);
         logout = view.findViewById(R.id.profileLogout);
         ImageView settingImage = view.findViewById(R.id.profileEdit);
         settingUsername = view.findViewById(R.id.settingsUsername);
@@ -203,6 +203,7 @@ public class ProfileFragment extends Fragment{
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
                 for(DataSnapshot postData: dataSnapshot.getChildren()){
                     postList.add(0, postData.getValue(Post.class));
                 }

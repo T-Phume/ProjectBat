@@ -66,14 +66,18 @@ public class ContactActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.hasChild(text.getText().toString())) {
-                                Friend f = dataSnapshot.child(text.getText().toString()).getValue(Friend.class);
-                                userRef.child(text.getText().toString()).setValue(f);
-                                Friend i = new Friend(us.getUsername(), us.getUri(), firebaseUser.getUid());
-                                Log.d(TAG, "onDataChange: " + f.getName());
-                                String temp = f.getName();
-                                friend.child(f.getRef()).child(us.getUsername()).setValue(i);
+                                if(!text.getText().toString().equals(us.getUsername())) {
+                                    Friend f = dataSnapshot.child(text.getText().toString()).getValue(Friend.class);
+                                    userRef.child(text.getText().toString()).setValue(f);
+                                    Friend i = new Friend(us.getUsername(), us.getUri(), firebaseUser.getUid());
+                                    Log.d(TAG, "onDataChange: " + f.getName());
+                                    String temp = f.getName();
+                                    friend.child(f.getRef()).child(us.getUsername()).setValue(i);
+                                } else{
+                                    Toast.makeText(ContactActivity.this, "Cannot add yourself!", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(ContactActivity.this, "Already Friend with this person.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ContactActivity.this, "Error adding", Toast.LENGTH_SHORT).show();
                             }
                         }
 

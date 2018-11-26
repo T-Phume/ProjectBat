@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.internal.InternalTokenResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class FeedFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_feed, container, false);
+        final View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         Button makePost = view.findViewById(R.id.feedMakePost);
         view.findViewById(R.id.feedFindContact).setOnClickListener(new View.OnClickListener() {
@@ -105,6 +106,15 @@ public class FeedFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new FriendAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Friend u = userList.get(position);
+                Intent intent = new Intent(adapter.mCtx, friendProfile.class);
+                intent.putExtra("FRIEND", u.getRef());
+                adapter.mCtx.startActivity(intent);
+            }
+        });
         adapter.notifyDataSetChanged();
         Log.d(TAG, Integer.toString(adapter.getItemCount()));
         return view;
@@ -114,6 +124,7 @@ public class FeedFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList.clear();
                 for(DataSnapshot childrenSnapshot: dataSnapshot.getChildren()) {
                     Friend temp = childrenSnapshot.getValue(Friend.class);
                     userList.add(temp);
